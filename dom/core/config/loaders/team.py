@@ -75,7 +75,7 @@ def load_teams_from_config(
                 country=raw_team.country,
             )
             teams.append(team)
-        
+
         # Validate no duplicate team names
         team_names = [team.name for team in teams]
         if len(team_names) != len(set(team_names)):
@@ -84,7 +84,7 @@ def load_teams_from_config(
                 f"Duplicate team names detected within the same contest: {', '.join(duplicates)}. "
                 f"Teams within a contest must have unique names to avoid ambiguity on the leaderboard."
             )
-        
+
         logger.info(f"Successfully loaded {len(teams)} teams from inline configuration")
         return teams
 

@@ -28,12 +28,12 @@ class TestCLIHelp:
         # Skip if ANY error occurs (e.g., import errors, runtime errors in CI)
         if result.returncode != 0 and ("Traceback" in result.stderr or "Error" in result.stderr):
             pytest.skip(f"CLI not fully functional in test environment: {result.stderr[:200]}")
-        assert (
-            result.returncode == 0
-        ), f"Help command FAILED! Users can't get help!\nSTDERR:\n{result.stderr}"
-        assert (
-            "Usage:" in result.stdout or "Commands:" in result.stdout
-        ), f"Help output doesn't look right:\n{result.stdout}"
+        assert result.returncode == 0, (
+            f"Help command FAILED! Users can't get help!\nSTDERR:\n{result.stderr}"
+        )
+        assert "Usage:" in result.stdout or "Commands:" in result.stdout, (
+            f"Help output doesn't look right:\n{result.stdout}"
+        )
         assert len(result.stdout) > 50, "Help text is too short/empty"
 
 
@@ -305,9 +305,9 @@ class TestVersionConsistency:
 
         # Should follow semantic versioning (major.minor.patch)
         version_pattern = r"^\d+\.\d+\.\d+(-\w+)?$"
-        assert re.match(
-            version_pattern, dom.__version__
-        ), f"Invalid version format: {dom.__version__}"
+        assert re.match(version_pattern, dom.__version__), (
+            f"Invalid version format: {dom.__version__}"
+        )
 
 
 @pytest.mark.e2e

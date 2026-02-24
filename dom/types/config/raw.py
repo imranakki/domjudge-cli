@@ -57,6 +57,7 @@ class RawProblem(BaseModel):
 
 class RawTeam(BaseModel):
     """Inline team definition in YAML."""
+
     name: str
     affiliation: str
     country: str | None = None  # ISO 3166-1 alpha-3 country code (optional)
@@ -67,6 +68,7 @@ class RawTeam(BaseModel):
 
 class RawTeamsConfig(BaseModel):
     """CSV/TSV file-based team configuration."""
+
     from_: str = Field(alias="from")
     delimiter: str | None = None
     rows: str

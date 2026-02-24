@@ -91,10 +91,10 @@ def initialize_contest():
     # Show CSV preview
     console.print("\n[bold cyan]CSV Preview[/bold cyan]")
     teams_file_path = Path(teams_path)
-    
+
     # Initial preview with auto-detection
     has_header = preview_csv(teams_file_path, delimiter, max_rows=10, show_column_numbers=True)
-    
+
     # Ask user to confirm header detection
     if has_header:
         header_confirmed = ask_bool(
@@ -105,7 +105,9 @@ def initialize_contest():
         if not header_confirmed:
             has_header = False
             console.print("\n[bold cyan]Updated CSV Preview (no header)[/bold cyan]")
-            preview_csv(teams_file_path, delimiter, max_rows=10, show_column_numbers=True, has_header=False)
+            preview_csv(
+                teams_file_path, delimiter, max_rows=10, show_column_numbers=True, has_header=False
+            )
     else:
         header_exists = ask_bool(
             "Does the first row contain headers?",
@@ -115,14 +117,18 @@ def initialize_contest():
         if header_exists:
             has_header = True
             console.print("\n[bold cyan]Updated CSV Preview (with header)[/bold cyan]")
-            preview_csv(teams_file_path, delimiter, max_rows=10, show_column_numbers=True, has_header=True)
+            preview_csv(
+                teams_file_path, delimiter, max_rows=10, show_column_numbers=True, has_header=True
+            )
 
     # Get column count for validation
     num_columns = get_column_count(teams_file_path, delimiter)
 
     # Interactive column mapping
     console.print("\n[bold cyan]Column Mapping[/bold cyan]")
-    console.print("Specify which columns contain team information (use column numbers from preview)")
+    console.print(
+        "Specify which columns contain team information (use column numbers from preview)"
+    )
 
     name_column = None
     while name_column is None:
@@ -180,17 +186,21 @@ def initialize_contest():
 
     if not rows_confirmed:
         console.print("Please specify the correct row range:")
-        start_row = ask(
-            "Start row (1-indexed)",
-            console=console,
-            default=str(start_row),
-            parser=ValidatorBuilder.integer().positive().build(),
+        start_row = int(
+            ask(
+                "Start row (1-indexed)",
+                console=console,
+                default=str(start_row),
+                parser=ValidatorBuilder.integer().positive().build(),
+            )
         )
-        end_row = ask(
-            "End row (1-indexed)",
-            console=console,
-            default=str(end_row),
-            parser=ValidatorBuilder.integer().positive().build(),
+        end_row = int(
+            ask(
+                "End row (1-indexed)",
+                console=console,
+                default=str(end_row),
+                parser=ValidatorBuilder.integer().positive().build(),
+            )
         )
 
     rows = f"{start_row}-{end_row}"

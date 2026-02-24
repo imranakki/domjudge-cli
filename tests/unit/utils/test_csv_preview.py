@@ -1,8 +1,5 @@
 """Unit tests for CSV preview utilities."""
 
-import csv
-from pathlib import Path
-
 import pytest
 
 from dom.utils.csv_preview import (

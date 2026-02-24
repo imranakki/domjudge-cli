@@ -110,6 +110,6 @@ def test_various_bcrypt_formats():
             # Verify the query structure is correct
             assert "UPDATE domjudge.user SET password = " in sql_query
             assert "WHERE username = 'admin'" in sql_query
-            assert (
-                bcrypt_hash in sql_query
-            ), f"Original bcrypt hash should be in the query: {bcrypt_hash}"
+            assert bcrypt_hash in sql_query, (
+                f"Original bcrypt hash should be in the query: {bcrypt_hash}"
+            )

@@ -70,23 +70,28 @@ def detect_header_row(file_path: Path, delimiter: str) -> bool:
         True if first row appears to be headers
     """
     rows = read_csv_rows(file_path, delimiter, max_rows=5)
-    
+
     if len(rows) < 2:
         return False
-    
+
     first_row = rows[0]
-    
+
     # Check if first row has common header keywords
     header_keywords = {
-        "id", "name", "team", "affiliation", "organization", "country",
-        "university", "college", "school", "institution"
+        "id",
+        "name",
+        "team",
+        "affiliation",
+        "organization",
+        "country",
+        "university",
+        "college",
+        "school",
+        "institution",
     }
-    
+
     first_row_lower = [cell.lower() for cell in first_row]
-    if any(keyword in " ".join(first_row_lower) for keyword in header_keywords):
-        return True
-    
-    return False
+    return any(keyword in " ".join(first_row_lower) for keyword in header_keywords)
 
 
 def auto_detect_data_range(file_path: Path, delimiter: str) -> tuple[int, int]:
@@ -102,10 +107,10 @@ def auto_detect_data_range(file_path: Path, delimiter: str) -> tuple[int, int]:
     """
     total_rows = count_csv_rows(file_path, delimiter)
     has_header = detect_header_row(file_path, delimiter)
-    
+
     start_row = 2 if has_header else 1
     end_row = total_rows
-    
+
     return start_row, end_row
 
 
@@ -114,7 +119,7 @@ def preview_csv(
     delimiter: str,
     max_rows: int = 10,
     show_column_numbers: bool = True,
-    has_header: bool | None = None
+    has_header: bool | None = None,
 ) -> bool:
     """
     Display a preview of the CSV file with Rich formatting.
@@ -133,25 +138,25 @@ def preview_csv(
     total_rows = count_csv_rows(file_path, delimiter)
     if has_header is None:
         has_header = detect_header_row(file_path, delimiter)
-    
+
     if not rows:
         console.print("[yellow]Warning: CSV file is empty[/yellow]")
-        return
-    
+        return False
+
     # Determine column count
     num_columns = max(len(row) for row in rows) if rows else 0
-    
+
     # Create Rich table
     table = Table(
         title=f"CSV Preview: {file_path.name}",
         caption=f"Showing {len(rows)} of {total_rows} rows",
         show_header=True,
-        header_style="bold cyan"
+        header_style="bold cyan",
     )
-    
+
     # Add columns based on whether first row is header
     table.add_column("Row", style="dim", width=4)
-    
+
     if has_header and rows:
         # Use first row as column headers
         first_row = rows[0]
@@ -162,7 +167,7 @@ def preview_csv(
         for col_idx in range(len(first_row), num_columns):
             col_label = f"Col {col_idx + 1}" if show_column_numbers else f"Column {col_idx + 1}"
             table.add_column(col_label)
-        
+
         # Add data rows (skip first row since it's the header)
         for row_idx, row in enumerate(rows[1:], start=2):
             padded_row = row + [""] * (num_columns - len(row))
@@ -175,14 +180,14 @@ def preview_csv(
         else:
             for col_idx in range(num_columns):
                 table.add_column(f"Column {col_idx + 1}")
-        
+
         # Add all rows as data
         for row_idx, row in enumerate(rows, start=1):
             padded_row = row + [""] * (num_columns - len(row))
             table.add_row(str(row_idx), *padded_row)
-    
+
     console.print(table)
-    
+
     return has_header
 
 
@@ -216,7 +221,7 @@ def validate_column_index(column_str: str, num_columns: int) -> int | None:
     """
     # Remove $ prefix if present
     column_str = column_str.strip().lstrip("$")
-    
+
     try:
         col_idx = int(column_str)
         if 1 <= col_idx <= num_columns:
